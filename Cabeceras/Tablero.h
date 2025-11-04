@@ -33,7 +33,7 @@ post: muestra en consola el nombre y tipo de cada casilla,
 void mostrarTablero (const Tablero &t);
 
 /*
-pre: actual != null && pasos <= 0
+pre: actual != null && pasos >= 0
 post: devuelve puntero a la casilla resultante después de
       avanzar 'pasos' posiciones en el sentido horario.
 */
