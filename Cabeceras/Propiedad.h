@@ -19,24 +19,24 @@ struct Propiedad{
 pre: valores válidos, precio > 0
 post: devuelve una propiedad sin dueño
 */
-Propiedad* crearPropiedad(const string &nombre, const string &color, int precio, int renta);
+Propiedad crearPropiedad(const string &nombre, const string &color, int precio, int renta);
 
 /*
 pre: propiedad válida
 post: muestra los datos de la propiedad
 */
-void mostrarPropiedad(const Propiedad* p);
+void mostrarPropiedad(const Propiedad &p);
 
 /*
 pre: propiedad válida y jugador existente
 post: asigna el dueño a la propiedad
 */
-void asignarDueno(Propiedad* p, Jugador* j);
+void asignarDueno(Propiedad &p, Jugador* j);
 
 /*
 pre: propiedad válida
 post: elimina el dueño de la propiedad
 */
-void eliminarDueno(Propiedad* p);
+void liberarPropiedad(Propiedad &p);
 
 #endif // PROPIEDAD_H

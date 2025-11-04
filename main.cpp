@@ -1,19 +1,27 @@
-#include "Tablero.h"
+#include "Banco.h"
+#include "Propiedad.h"
 #include "Jugador.h"
 #include <iostream>
 
 int main() {
-    Tablero t;
-    crearTablero(t);
-    mostrarTablero(t);
+    Banco banco = crearBanco();
+    Jugador j = {"Sebastian", 1500, nullptr, false};
+    Propiedad p = crearPropiedad("Baltic Avenue", "Marron", 60, 4);
 
-    Jugador j1 = crearJugador("Sebastian", t.inicio);
-    cout << j1.nombre << " inicia en: " << j1.posicion->nombre << "\n";
+    cout << "\n--- Estado inicial ---\n";
+    mostrarPropiedad(p);
 
-    moverJugador(j1, 7); // mover 7 casillas
-    moverJugador(j1, 5); // mover otras 5
-    pagar(j1, 200);
-    cobrar(j1, 100);
+    cout << "\n--- Compra de propiedad ---\n";
+    venderPropiedad(banco, j, p);
 
+    cout << "\n--- Cobro de impuesto ---\n";
+    cobrarBanco(banco, j, 200);
+
+    cout << "\n--- Pago al pasar por 'Go' ---\n";
+    pagarBanco(banco, j, 200);
+
+    cout << "\n--- Estado final ---\n";
+    mostrarPropiedad(p);
     return 0;
 }
+
