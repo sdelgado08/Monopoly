@@ -5,8 +5,12 @@ using namespace std;
 
 #include "Banco.h"
 
-// pre: banco válido
-// post: registra todas las propiedades del Monopoly original
+/*
+pre: banco válido
+post: registra todas las propiedades del Monopoly original en el banco,
+      incluyendo propiedades normales, ferrocarriles y servicios públicos,
+      con sus respectivos precios, alquileres y características
+*/
 void cargarPropiedades(Banco &b);
 
-#endif // CARGARPROPIEDADES_H
+#endif 

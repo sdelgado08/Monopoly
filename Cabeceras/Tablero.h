@@ -46,4 +46,20 @@ post: devuelve puntero a la casilla resultante después de
 */
 Casilla* retrocederEnTablero (Casilla* actual, int pasos);
 
+/*
+pre: t.inicio != null, casilla != null
+post: retorna el índice de la casilla en el tablero (0-39),
+      contando desde la casilla de inicio (Go = 0).
+      Si la casilla no se encuentra, retorna -1.
+*/
+int obtenerIndiceCasilla (const Tablero &t, Casilla* casilla);
+
+/*
+pre: t.inicio != null, indice >= 0
+post: retorna un puntero a la casilla en la posición 'indice'
+      del tablero, contando desde la casilla de inicio (0 = Go).
+      Si el índice es inválido, retorna nullptr.
+*/
+Casilla* obtenerCasillaPorIndice (const Tablero &t, int indice);
+
 #endif //TABLERO_H
