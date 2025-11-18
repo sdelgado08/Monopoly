@@ -1,6 +1,11 @@
 #include "CargarCartas.h"
 
-// Función auxiliar para encolar una carta más fácil
+using namespace std;
+
+/*
+Función para crear y encolar una carta de forma más sencilla.
+Crea una carta con el mensaje y efecto especificados y la añade a la cola.
+*/
 static void add(ColaCartas &c, const string &mensaje, int efecto) {
     Carta card;
     card.mensaje = mensaje;
@@ -12,6 +17,17 @@ static void add(ColaCartas &c, const string &mensaje, int efecto) {
 //  ARCA COMUNAL (16 cartas)
 // --------------------------
 
+/*
+Carga las 16 cartas de Arca Comunal en la cola especificada.
+Cada carta tiene un mensaje descriptivo y un código de efecto:
+- Efecto 1: Cobrar dinero del banco
+- Efecto 2: Pagar dinero al banco
+- Efecto 3: Avanzar hasta Go
+- Efecto 4: Ir a la cárcel
+- Efecto 5: Cobrar de cada jugador
+- Efecto 6: Ir al servicio más cercano
+- Efecto 7: Ir al ferrocarril más cercano
+*/
 void cargarArcaComunal(ColaCartas &c) {
     add(c, "Cobra $200 por error bancario a tu favor.", 1);
     add(c, "Paga $50 por gastos médicos.", 2);
@@ -35,6 +51,18 @@ void cargarArcaComunal(ColaCartas &c) {
 //  CASUALIDAD (16 cartas)
 // --------------------------
 
+/*
+Carga las 16 cartas de Casualidad en la cola especificada.
+Cada carta tiene un mensaje descriptivo y un código de efecto:
+- Efecto 1: Cobrar dinero del banco
+- Efecto 2: Pagar dinero al banco
+- Efecto 3: Avanzar hasta Go
+- Efecto 4: Ir a la cárcel
+- Efecto 7: Ir al ferrocarril más cercano
+- Efecto 8: Ir a una propiedad específica
+- Efecto 9: Retroceder espacios
+- Efecto 10: Avanzar a propiedad más cercana disponible
+*/
 void cargarCasualidad(ColaCartas &c) {
     add(c, "Avanza hasta Go.", 3);
     add(c, "Ve a Illinois Avenue.", 8);

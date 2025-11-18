@@ -3,28 +3,42 @@
 
 using namespace std;
 
-// Crea un banco con dinero inicial y sin propiedades
+/*
+Crea un banco inicializado con dinero inicial estándar y sin propiedades.
+El banco comienza con $20,000 para realizar transacciones con los jugadores.
+*/
 Banco crearBanco() {
     Banco b;
-    b.dineroTotal = 20000;    // dinero inicial estándar
+    b.dineroTotal = 20000;    // Dinero inicial estándar del banco
     return b;
 }
 
-// Registra una propiedad en el banco (queda sin dueño)
+/*
+Registra una propiedad en el banco, haciéndola disponible para compra.
+La propiedad se almacena en el mapa usando su nombre como clave.
+*/
 void registrarPropiedad(Banco &b, const Propiedad &p) {
     b.propiedades[p.nombre] = p;
 }
 
-// Incrementa el dinero del banco
+/*
+Incrementa el dinero total del banco en el monto especificado.
+Valida que el monto sea positivo antes de realizar la operación.
+*/
 void depositarDinero(Banco &b, int monto) {
-    if (monto < 0) return;
+    if (monto < 0) return;  // Validación: no se permiten montos negativos
     b.dineroTotal += monto;
 }
 
-// El banco paga dinero (si tiene suficiente en caja)
+/*
+Retira dinero del banco si tiene suficiente disponible.
+Si el banco no tiene suficiente dinero, muestra un mensaje y no realiza
+la operación. Valida que el monto sea positivo.
+*/
 void retirarBanco(Banco &b, int monto) {
-    if (monto < 0) return;
+    if (monto < 0) return;  // Validación: no se permiten montos negativos
 
+    // Verificar que el banco tenga suficiente dinero
     if (b.dineroTotal < monto) {
         cout << "El banco no tiene suficiente dinero para retirar $" << monto << endl;
         return;
@@ -33,37 +47,58 @@ void retirarBanco(Banco &b, int monto) {
     b.dineroTotal -= monto;
 }
 
-// El jugador paga al banco
+/*
+Transfiere dinero del jugador al banco.
+Valida que el jugador tenga suficiente dinero antes de realizar la transacción.
+Si el jugador no tiene suficiente, muestra un mensaje y no realiza la operación.
+*/
 void cobrarBanco(Banco &b, Jugador &j, int monto) {
-    if (monto < 0) return;
+    if (monto < 0) return;  // Validación: no se permiten montos negativos
 
+    // Verificar que el jugador tenga suficiente dinero
     if (j.dinero < monto) {
-        cout <<j.nombre << " no tiene suficiente dinero para pagar $" << monto << endl;
+        cout << j.nombre << " no tiene suficiente dinero para pagar $" << monto << endl;
         return;
     }
 
+    // Realizar la transacción: jugador paga, banco recibe
     j.dinero -= monto;
     b.dineroTotal += monto;
 }
 
-// El banco paga al jugador
+/*
+Transfiere dinero del banco al jugador.
+Valida que el banco tenga suficiente dinero antes de realizar la transacción.
+Si el banco no tiene suficiente, muestra un mensaje y no realiza la operación.
+*/
 void pagarBanco(Banco &b, Jugador &j, int monto) {
-    if (monto < 0) return;
+    if (monto < 0) return;  // Validación: no se permiten montos negativos
 
+    // Verificar que el banco tenga suficiente dinero
     if (b.dineroTotal < monto) {
         cout << "El banco no tiene suficiente dinero para pagar $" << monto << endl;
         return;
     }
 
+    // Realizar la transacción: banco paga, jugador recibe
     j.dinero += monto;
     b.dineroTotal -= monto;
 }
 
-// El jugador compra una propiedad del banco
+/*
+Permite que un jugador compre una propiedad del banco.
+Realiza las siguientes validaciones:
+1. Verifica que la propiedad exista en el banco
+2. Verifica que la propiedad no tenga dueño
+3. Verifica que el jugador tenga suficiente dinero
+Si todas las validaciones pasan, transfiere la propiedad al jugador y
+actualiza el dinero del banco y del jugador.
+*/
 void venderPropiedad(Banco &b, Jugador &j, const string &nombreProp) {
-    // verificar que exista la propiedad
+    // Buscar la propiedad en el mapa del banco
     auto it = b.propiedades.find(nombreProp);
 
+    // Validación 1: verificar que la propiedad exista
     if (it == b.propiedades.end()) {
         cout << "La propiedad '" << nombreProp << "' no existe en el banco.\n";
         return;
@@ -71,63 +106,27 @@ void venderPropiedad(Banco &b, Jugador &j, const string &nombreProp) {
 
     Propiedad &p = it->second;
 
-    // verificar si ya tiene dueño
+    // Validación 2: verificar que la propiedad no tenga dueño
     if (p.tieneDueno) {
-        cout << "La propiedad '" << p.nombre << "' ya tiene dueño.\n";
+        cout << "La propiedad '" << p.nombre << "' ya tiene dueno.\n";
         return;
     }
 
-    // verificar si el jugador tiene dinero suficiente
+    // Validación 3: verificar que el jugador tenga dinero suficiente
     if (j.dinero < p.precio) {
         cout << j.nombre << " no tiene suficiente dinero para comprar '" << p.nombre << "'.\n";
         return;
     }
 
-    // el jugador paga
+    // Realizar la transacción: jugador paga el precio
     j.dinero -= p.precio;
     b.dineroTotal += p.precio;
 
-    // asignamos dueño
-    asignarDueno(p, &j);
+    // Asignar la propiedad al jugador
+    p.tieneDueno = true;
+    p.disponible = false;
+    p.dueno = &j;
+    j.propiedades.push_back(p.nombre);
 
-    cout << j.nombre << " compró la propiedad '" << p.nombre << "' por $" << p.precio << endl;
-}
-
-bool bancoVenderPropiedad(Banco &b, Jugador &j, const string &nombreProp) {
-    if (b.propiedades.count(nombreProp) == 0) {
-        cout << "Esa propiedad no está en el banco.\n";
-        return false;
-    }
-
-    Propiedad &p = b.propiedades[nombreProp];
-
-    if (!comprarPropiedad(p, j)) return false;
-
-    // ya no está en el banco
-    b.propiedades.erase(nombreProp);
-
-    return true;
-}
-
-bool bancoComprarPropiedad(Banco &b, Jugador &j, const string &nombreProp) {
-
-    bool laTiene = false;
-    for (auto &s : j.propiedades) {
-        if (s == nombreProp) {
-            laTiene = true;
-            break;
-        }
-    }
-
-    if (!laTiene) {
-        cout << "El jugador no posee esta propiedad.\n";
-        return false;
-    }
-
-    // el banco la compra usando venderPropiedad()
-    // pero primero debemos tener acceso al objeto Propiedad…
-    // en una implementación real tendrías un "tablero" con todas las propiedades centralizadas.
-    // Aquí lo haremos recibiendo una referencia externa.
-    cout << "bancoComprarPropiedad requiere referencia al objeto Propiedad.\n";
-    return false;
+    cout << endl << j.nombre << " compro la propiedad '" << p.nombre << "' por $" << p.precio << endl;
 }
